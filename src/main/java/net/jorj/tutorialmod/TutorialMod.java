@@ -1,6 +1,9 @@
 package net.jorj.tutorialmod;
 
 import com.mojang.logging.LogUtils;
+import net.jorj.tutorialmod.block.ModBlocks;
+import net.jorj.tutorialmod.item.ModCreativeModTabs;
+import net.jorj.tutorialmod.item.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
@@ -28,7 +31,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
-//change for github
+
 @Mod(TutorialMod.MOD_ID)
 public class TutorialMod
 {
@@ -36,6 +39,11 @@ public class TutorialMod
     private static final Logger LOGGER = LogUtils.getLogger();
     public TutorialMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        ModCreativeModTabs.register(modEventBus);
+
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 
@@ -49,9 +57,11 @@ public class TutorialMod
 
     }
 
-    private void addCreative(BuildCreativeModeTabContentsEvent event)
-    {
-
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if(event.getTabKey()== CreativeModeTabs.INGREDIENTS){
+            event.accept(ModItems.SAPPHIRE);
+            event.accept(ModItems.RAW_SAPPHIRE);
+        }
     }
 
     @SubscribeEvent
